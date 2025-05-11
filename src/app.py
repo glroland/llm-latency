@@ -3,11 +3,13 @@ import click
 from client import execute_inference
 
 MAX_TOKENS = 2000
+MAX_WORDS = 2000
+MIN_WORDS = 1700
 
 prompts = [
     "Write a story about a dragon who loves to dance.",
     "Describe a futuristic city where robots and humans coexist.",
-    "Imagine a world where everyone has superpowers. What would that look like?",
+#    "Imagine a world where everyone has superpowers. What would that look like?",
     "Create a dialogue between a detective and a suspect in a mysterious case.",
     "Write a poem about the changing seasons.",
     "Describe a day in the life of a time traveler.",
@@ -20,7 +22,7 @@ prompts = [
     "Create a character profile for a superhero with an unusual power.",
     "Write a short story set in a post-apocalyptic world.",
     "Describe a dream you had that felt incredibly real.",
-    "Imagine a world where everyone has to wear a mask. What would that mean for society?",
+ #   "Imagine a world where everyone has to wear a mask. What would that mean for society?",
     "Write a scene from a play set in a coffee shop.",
     "Describe a futuristic sport that combines elements of different games.",
 ]
@@ -53,7 +55,7 @@ def display_response(response):
     Args:
         response (dict): The response from the model.
     """
-    message = f"{response['test_name']}\t\t{response['ttft']}\t\t{response['latency']}\t\t{len(response['response'])}\t\t{len(response['response'].split())}"
+    message = f"{response['test_name']}\t\t{response['ttft']}\t\t{response['duration']}\t\t{len(response['response'])}\t\t{len(response['response'].split())}"
     print(message)
 
 @click.command()
@@ -81,16 +83,22 @@ def main(config_filename, show_responses):
             url = columns[1].strip()
             token = columns[2].strip()
             model = columns[3].strip()
+            
+            # build prompt
+            prompt = random.choice(prompts)
+#            adj_prompt = f"{prompt} Respond with approximately {MAX_WORDS} words.  Never respond with less than {MIN_WORDS}."
+            adj_prompt = f"{prompt}  Always respond with between {MIN_WORDS} and {MAX_WORDS} words."
 
             # execute test with a random prompt
-            prompt = random.choice(prompts)
-            response = execute_inference(test_name, url, token, model, prompt, MAX_TOKENS)
+            print ("Running test:", test_name)
+            response = execute_inference(test_name, url, token, model, adj_prompt, MAX_TOKENS)
             results.append(response)
 
     # display results
+    print ()
     print("All tests completed.")
     print ()
-    print("Test\t\t\tTTFT\t\tLatency\t\tBytes\t\tWords:")
+    print("Test\t\t\tTTFT\t\tDuration\tBytes\t\tWords:")
     print("------------------------------------------------------------------------------")
     for result in results:
         display_response(result)

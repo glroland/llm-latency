@@ -30,17 +30,14 @@ def execute_inference(test_name, url, token, model, prompt, max_tokens):
     client = OpenAI(base_url=url,
                     api_key=token)
 
-    # adjusted prompt
-    adj_prompt = f"{prompt} Respond in {max_tokens} tokens or less."
-
     ts_start = get_timestamp()
 
     # invoke the inference API
     stream = client.chat.completions.create(
             model=model,
-            messages=[{"role": "user", "content": adj_prompt}],
+            messages=[{"role": "user", "content": prompt}],
 #            temperature=0.7,
-            max_completion_tokens=max_tokens,  
+#            max_completion_tokens=max_tokens,  
             stream=True)
 
     # Collect the streamed response
@@ -65,7 +62,7 @@ def execute_inference(test_name, url, token, model, prompt, max_tokens):
         "ts_start": ts_start,
         "ts_end": ts_end,
         "ts_ttft": ts_ttft,
-        "latency": ts_end - ts_start,
+        "duration": ts_end - ts_start,
         "ttft": ts_ttft - ts_start if ts_ttft else None
     }
     return response
