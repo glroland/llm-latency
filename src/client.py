@@ -39,8 +39,8 @@ def execute_inference(test_name, url, token, model, prompt, max_tokens):
     stream = client.chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": adj_prompt}],
-            temperature=0.7,
-            max_tokens=max_tokens,  
+#            temperature=0.7,
+            max_completion_tokens=max_tokens,  
             stream=True)
 
     # Collect the streamed response
@@ -53,7 +53,7 @@ def execute_inference(test_name, url, token, model, prompt, max_tokens):
             if first_chunk:
                 ts_ttft = get_timestamp()
                 first_chunk = False
-        full_response += content
+            full_response += content
  
     ts_end = get_timestamp()
 

@@ -53,7 +53,7 @@ def display_response(response):
     Args:
         response (dict): The response from the model.
     """
-    message = f"{response['test_name']}\t\t{response['ttft']}\t\t{response['latency']}"
+    message = f"{response['test_name']}\t\t{response['ttft']}\t\t{response['latency']}\t\t{len(response['response'])}"
     print(message)
 
 @click.command()
@@ -90,7 +90,8 @@ def main(config_filename, show_responses):
     # display results
     print("All tests completed.")
     print ()
-    print("Test\t\tTTFT\t\tLatency:")
+    print("Test\t\t\tTTFT\t\tLatency\t\tLength:")
+    print("---------------------------------------------------------------")
     for result in results:
         display_response(result)
     print ()
