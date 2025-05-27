@@ -45,12 +45,13 @@ def execute_inference(test_name, url, token, model, prompt, max_tokens):
     first_chunk = True
     ts_ttft = None
     for chunk in stream:
-        content = chunk.choices[0].delta.content
-        if content:
-            if first_chunk:
-                ts_ttft = get_timestamp()
-                first_chunk = False
-            full_response += content
+        if len(chunk.choices) > 0:
+            content = chunk.choices[0].delta.content
+            if content:
+                if first_chunk:
+                    ts_ttft = get_timestamp()
+                    first_chunk = False
+                full_response += content
  
     ts_end = get_timestamp()
 

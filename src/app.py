@@ -72,22 +72,22 @@ def main(config_filename, show_responses):
 
     print("Running tests...")
     print ()
+            
+    # build prompt
+    prompt = random.choice(prompts)
+#            adj_prompt = f"{prompt} Respond with approximately {MAX_WORDS} words.  Never respond with less than {MIN_WORDS}."
+    adj_prompt = f"{prompt}  Always respond with between {MIN_WORDS} and {MAX_WORDS} words."
 
     # process each line of the configuration as a test
     results = []
     for config_entry in config:
-        if len(config_entry) > 0:
+        if len(config_entry) > 0 and not config_entry.strip().startswith("#"):
             # parse config entry
             columns = config_entry.split(",")
             test_name = columns[0].strip()
             url = columns[1].strip()
             token = columns[2].strip()
             model = columns[3].strip()
-            
-            # build prompt
-            prompt = random.choice(prompts)
-#            adj_prompt = f"{prompt} Respond with approximately {MAX_WORDS} words.  Never respond with less than {MIN_WORDS}."
-            adj_prompt = f"{prompt}  Always respond with between {MIN_WORDS} and {MAX_WORDS} words."
 
             # execute test with a random prompt
             print ("Running test:", test_name)
